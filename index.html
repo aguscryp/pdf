@@ -1,1 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Factura PDF</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f4f4f4;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+      border: 1px solid #ccc;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .info {
+      margin-bottom: 20px;
+    }
+    .info p {
+      margin: 5px 0;
+    }
+    .estado {
+      font-weight: bold;
+      color: red;
+      margin-bottom: 20px;
+    }
+    .clausulas {
+      font-size: 14px;
+      white-space: pre-wrap;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="factura">
+    <h1>Resultado de Solicitud</h1>
+    <div class="info">
+      <p><strong>Cliente:</strong> ESQUIVEL ORIANA</p>
+      <p><strong>CUIL:</strong> 27-47940930-2</p>
+      <p><strong>Edad:</strong> 19 años</p>
+      <p><strong>Ubicación:</strong> Garín, Buenos Aires (Pcia)</p>
+    </div>
+    <div class="estado">Estado: RECHAZADO</div>
+    <div class="clausulas">
+Bien, le comentamos:
+
+Los $5,000 que abonaste no fueron para “ya recibir un préstamo.
+Fueron para realizar un diagnóstico y corroborar si sos apto en trabajar conmigo.
+
+Yo cuento con más de 557 clientes y hace poco logré extenderme de manera online con esta metodología de trabajo.
+¡Algunos clientes conformes, otros no! Pero bueno, no puedo controlar lo incontrolable.
+
+🙌🏻 ¡Espero sepas entender!
+Soy emprendedor, tengo mis negocios y no soy un chanta como los que andan rondando por ahí sacando plata a la gente.
+
+Si bien, lo que es el diagnóstico sumado a un informe de datos tuyo, dio “rechazado” y lamentablemente no podremos trabajar juntos.
+
+Claro! “Pero Agus, devolveme el dinero” Sisi, no tengo problema.
+¡El dinero que te devolvería! Sería plata de mi bolsillo, por que el sistema ya consumió los $5,000 que vos abonaste.
+
+Si bien, quizás ¡Desconfías un poco! y dirás “jaja pero que chanta”, claro que no ➡️ Porque antes de proceder con la transacción de los $5,000 estuviste de acuerdo con cada uno de los mensajes informativos que te envié.
+
+Donde se explica a detalle que el sistema “puede aceptar o rechazar” y no todo está a disposición mía.
+
+Yo ahora quedo como ¡Garca! Pero y si te hubiese “Aceptado” sería la mejor persona del mundo. 🌎
+
+Espero sepas comprender, trato de dar lo mejor de mí y jamás en mi vida me he quedado con la plata de alguien.
+Para eso tengo mis propios negocios y desde que empieza el día hasta la noche en que termina logro esforzarme lo suficiente para hacerlos crecer.
+    </div>
+    <button onclick="generarPDF()">Descargar PDF</button>
+  </div>
+
+  <script>
+    async function generarPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const content = document.getElementById("factura");
+      await doc.html(content, {
+        callback: function (doc) {
+          doc.save("resultado_solicitud.pdf");
+        },
+        x: 10,
+        y: 10,
+        width: 180
+      });
+    }
+  </script>
+</body>
+</html>
 
