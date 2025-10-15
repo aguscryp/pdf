@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Generador de Factura PDF</title>
+  <title>Factura Profesional PDF</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body {
@@ -91,7 +91,7 @@ Actualmente gestionamos más de 557 clientes activos y hemos expandido nuestros 
 
 🔹 Resultado de su evaluación: RECHAZADO
 
-Lamentablemente, no podremos avanzar con una colaboración en este momento. Es importante destacar que el monto abonado ha sido consumido por el sistema en el proceso de análisis, y no se contempla ningún tipo de reembolso una vez iniciado el diagnóstico.
+Lamentablemente, no podremos avanzar con una colaboración en este momento. Es importante destacar que el monto abonado ha sido consumido por el sistema en el proceso de análisis, y **no se contempla ningún tipo de reembolso** una vez iniciado el diagnóstico.
 
 Antes de realizar el pago, usted aceptó los términos informativos donde se especifica que el resultado puede ser aceptado o rechazado, y que no depende exclusivamente de nuestra decisión.
 
@@ -100,40 +100,48 @@ Somos emprendedores comprometidos con la ética y la transparencia. Jamás nos h
 Agradecemos su interés y le deseamos lo mejor en sus próximos proyectos.
       `;
 
+      // Encabezado
       doc.setFont("helvetica", "bold");
+      doc.setTextColor(0, 102, 204); // azul
       doc.setFontSize(18);
       doc.text("Factura de Solicitud", 105, 20, { align: "center" });
 
+      // Sello RECHAZADO
+      doc.setTextColor(255, 0, 0); // rojo
+      doc.setFontSize(30);
+      doc.text("RECHAZADO", 105, 35, { align: "center" });
+
+      // Datos del cliente
       doc.setFontSize(12);
-      doc.setDrawColor(0);
-      doc.line(20, 25, 190, 25);
+      doc.setTextColor(0, 0, 0);
+      doc.setDrawColor(150);
+      doc.line(20, 42, 190, 42);
+      doc.text(`Factura Nº: #${String(facturaNum).padStart(4, '0')}`, 20, 50);
+      doc.text(`Fecha: ${fecha}`, 150, 50);
+      doc.text(`Cliente: ${nombre}`, 20, 58);
+      doc.text(`CUIL: ${cuil}`, 20, 65);
+      doc.text(`Edad: ${edad}`, 20, 72);
+      doc.text(`Provincia: ${provincia}`, 20, 79);
+      doc.text(`Localidad: ${localidad}`, 20, 86);
 
-      doc.setFont("helvetica", "normal");
-      doc.text(`Factura Nº: #${String(facturaNum).padStart(4, '0')}`, 20, 32);
-      doc.text(`Fecha: ${fecha}`, 150, 32);
-      doc.text(`Cliente: ${nombre}`, 20, 40);
-      doc.text(`CUIL: ${cuil}`, 20, 47);
-      doc.text(`Edad: ${edad}`, 20, 54);
-      doc.text(`Provincia: ${provincia}`, 20, 61);
-      doc.text(`Localidad: ${localidad}`, 20, 68);
-
-      doc.line(20, 73, 190, 73);
+      // Detalle de factura
+      doc.line(20, 91, 190, 91);
       doc.setFont("helvetica", "bold");
-      doc.text("Detalle de Factura:", 20, 80);
+      doc.text("Detalle de Factura:", 20, 98);
       doc.setFont("helvetica", "normal");
-      doc.text("Concepto: Evaluación de solicitud", 20, 88);
-      doc.text("Monto: $5,000", 150, 88);
-      doc.line(20, 93, 190, 93);
+      doc.text("Concepto: Evaluación de solicitud", 20, 106);
+      doc.text("Monto: $5,000", 150, 106);
+      doc.line(20, 111, 190, 111);
       doc.setFont("helvetica", "bold");
-      doc.text("Total: $5,000", 150, 100);
+      doc.text("Total: $5,000", 150, 118);
 
-      doc.line(20, 105, 190, 105);
+      // Cláusula
+      doc.line(20, 123, 190, 123);
       doc.setFont("helvetica", "bold");
-      doc.text("Cláusula Informativa:", 20, 112);
+      doc.text("Cláusula Informativa:", 20, 130);
       doc.setFont("helvetica", "normal");
-
       const clausulaFormateada = doc.splitTextToSize(clausula, 170);
-      doc.text(clausulaFormateada, 20, 120);
+      doc.text(clausulaFormateada, 20, 138);
 
       doc.save(`factura_${nombre.replaceAll(" ", "_")}.pdf`);
     }
