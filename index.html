@@ -2,58 +2,81 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Factura Profesional PDF</title>
+  <title>Facturador Electrónico</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body {
+      margin: 0;
+      padding: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: #f0f0f0;
-      padding: 20px;
+      background: #0f2027;
+      background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
     }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
     .formulario {
+      position: relative;
+      z-index: 1;
       background: white;
       padding: 30px;
       max-width: 700px;
-      margin: auto;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
-    h2 {
+      margin: 60px auto;
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.3);
       text-align: center;
-      margin-bottom: 30px;
-      color: #333;
     }
+
+    h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #007bff;
+    }
+
     label {
       display: block;
       margin-top: 15px;
       font-weight: 600;
+      text-align: left;
     }
+
     textarea {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin-top: 5px;
       border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 15px;
+      border-radius: 8px;
+      font-size: 16px;
     }
+
     button {
       margin-top: 30px;
       padding: 12px 25px;
       background: #007bff;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       font-size: 16px;
       cursor: pointer;
     }
+
     button:hover {
       background: #0056b3;
     }
   </style>
 </head>
 <body>
+  <canvas id="particles"></canvas>
   <div class="formulario">
-    <h2>Generador de Factura PDF</h2>
+    <h2>🚀 Facturador Electrónico</h2>
     <label>Pegá los datos del cliente:</label>
     <textarea id="datosCliente" rows="6" placeholder="Ejemplo:
 AYBAR MAXIMILIANO RICARDO
@@ -61,7 +84,6 @@ AYBAR MAXIMILIANO RICARDO
 33 años
 Buenos Aires (Pcia)
 Villa Dominico"></textarea>
-
     <button onclick="generarPDF()">Generar PDF</button>
   </div>
 
@@ -100,18 +122,15 @@ Somos emprendedores comprometidos con la ética y la transparencia. Jamás nos h
 Agradecemos su interés y le deseamos lo mejor en sus próximos proyectos.
       `;
 
-      // Encabezado
       doc.setFont("helvetica", "bold");
-      doc.setTextColor(0, 102, 204); // azul
+      doc.setTextColor(0, 102, 204);
       doc.setFontSize(18);
       doc.text("Factura de Solicitud", 105, 20, { align: "center" });
 
-      // Sello RECHAZADO
-      doc.setTextColor(255, 0, 0); // rojo
+      doc.setTextColor(255, 0, 0);
       doc.setFontSize(30);
       doc.text("RECHAZADO", 105, 35, { align: "center" });
 
-      // Datos del cliente
       doc.setFontSize(12);
       doc.setTextColor(0, 0, 0);
       doc.setDrawColor(150);
@@ -124,7 +143,6 @@ Agradecemos su interés y le deseamos lo mejor en sus próximos proyectos.
       doc.text(`Provincia: ${provincia}`, 20, 79);
       doc.text(`Localidad: ${localidad}`, 20, 86);
 
-      // Detalle de factura
       doc.line(20, 91, 190, 91);
       doc.setFont("helvetica", "bold");
       doc.text("Detalle de Factura:", 20, 98);
@@ -135,7 +153,6 @@ Agradecemos su interés y le deseamos lo mejor en sus próximos proyectos.
       doc.setFont("helvetica", "bold");
       doc.text("Total: $5,000", 150, 118);
 
-      // Cláusula
       doc.line(20, 123, 190, 123);
       doc.setFont("helvetica", "bold");
       doc.text("Cláusula Informativa:", 20, 130);
@@ -145,6 +162,37 @@ Agradecemos su interés y le deseamos lo mejor en sus próximos proyectos.
 
       doc.save(`factura_${nombre.replaceAll(" ", "_")}.pdf`);
     }
+
+    // Partículas animadas
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = Array.from({ length: 100 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 2 + 1,
+      dx: (Math.random() - 0.5) * 0.5,
+      dy: (Math.random() - 0.5) * 0.5
+    }));
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,255,255,0.3)";
+        ctx.fill();
+        p.x += p.dx;
+        p.y += p.dy;
+        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+      });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
   </script>
 </body>
 </html>
+
