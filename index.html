@@ -2,47 +2,48 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Factura PDF</title>
+  <title>Factura Profesional PDF</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f0f0;
       padding: 20px;
-      background: #f4f4f4;
     }
-    .container {
+    .formulario {
       background: white;
-      padding: 20px;
-      max-width: 600px;
+      padding: 30px;
+      max-width: 700px;
       margin: auto;
-      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
-    h1 {
+    h2 {
       text-align: center;
+      margin-bottom: 30px;
       color: #333;
     }
-    .info {
-      margin-bottom: 20px;
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
     }
-    .info p {
-      margin: 5px 0;
-    }
-    .estado {
-      font-weight: bold;
-      color: red;
-      margin-bottom: 20px;
-    }
-    .clausulas {
-      font-size: 14px;
-      white-space: pre-wrap;
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 15px;
     }
     button {
-      margin-top: 20px;
-      padding: 10px 20px;
+      margin-top: 30px;
+      padding: 12px 25px;
       background: #007bff;
       color: white;
       border: none;
+      border-radius: 5px;
+      font-size: 16px;
       cursor: pointer;
     }
     button:hover {
@@ -51,57 +52,81 @@
   </style>
 </head>
 <body>
-  <div class="container" id="factura">
-    <h1>Resultado de Solicitud</h1>
-    <div class="info">
-      <p><strong>Cliente:</strong> ESQUIVEL ORIANA</p>
-      <p><strong>CUIL:</strong> 27-47940930-2</p>
-      <p><strong>Edad:</strong> 19 años</p>
-      <p><strong>Ubicación:</strong> Garín, Buenos Aires (Pcia)</p>
-    </div>
-    <div class="estado">Estado: RECHAZADO</div>
-    <div class="clausulas">
-Bien, le comentamos:
+  <div class="formulario">
+    <h2>Formulario de Cliente</h2>
+    <label>Nombre completo:</label>
+    <input type="text" id="nombre" />
 
-Los $5,000 que abonaste no fueron para “ya recibir un préstamo.
-Fueron para realizar un diagnóstico y corroborar si sos apto en trabajar conmigo.
+    <label>CUIL:</label>
+    <input type="text" id="cuil" />
 
-Yo cuento con más de 557 clientes y hace poco logré extenderme de manera online con esta metodología de trabajo.
-¡Algunos clientes conformes, otros no! Pero bueno, no puedo controlar lo incontrolable.
+    <label>Edad:</label>
+    <input type="text" id="edad" />
 
-🙌🏻 ¡Espero sepas entender!
-Soy emprendedor, tengo mis negocios y no soy un chanta como los que andan rondando por ahí sacando plata a la gente.
+    <label>Ubicación:</label>
+    <input type="text" id="ubicacion" />
 
-Si bien, lo que es el diagnóstico sumado a un informe de datos tuyo, dio “rechazado” y lamentablemente no podremos trabajar juntos.
+    <label>Estado:</label>
+    <input type="text" id="estado" />
 
-Claro! “Pero Agus, devolveme el dinero” Sisi, no tengo problema.
-¡El dinero que te devolvería! Sería plata de mi bolsillo, por que el sistema ya consumió los $5,000 que vos abonaste.
+    <label>Cláusulas importantes:</label>
+    <textarea id="clausulas" rows="10"></textarea>
 
-Si bien, quizás ¡Desconfías un poco! y dirás “jaja pero que chanta”, claro que no ➡️ Porque antes de proceder con la transacción de los $5,000 estuviste de acuerdo con cada uno de los mensajes informativos que te envié.
-
-Donde se explica a detalle que el sistema “puede aceptar o rechazar” y no todo está a disposición mía.
-
-Yo ahora quedo como ¡Garca! Pero y si te hubiese “Aceptado” sería la mejor persona del mundo. 🌎
-
-Espero sepas comprender, trato de dar lo mejor de mí y jamás en mi vida me he quedado con la plata de alguien.
-Para eso tengo mis propios negocios y desde que empieza el día hasta la noche en que termina logro esforzarme lo suficiente para hacerlos crecer.
-    </div>
-    <button onclick="generarPDF()">Descargar PDF</button>
+    <button onclick="generarPDF()">Generar Factura PDF</button>
   </div>
 
   <script>
     async function generarPDF() {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
-      const content = document.getElementById("factura");
-      await doc.html(content, {
-        callback: function (doc) {
-          doc.save("resultado_solicitud.pdf");
-        },
-        x: 10,
-        y: 10,
-        width: 180
-      });
+
+      const nombre = document.getElementById("nombre").value;
+      const cuil = document.getElementById("cuil").value;
+      const edad = document.getElementById("edad").value;
+      const ubicacion = document.getElementById("ubicacion").value;
+      const estado = document.getElementById("estado").value;
+      const clausulas = document.getElementById("clausulas").value;
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(18);
+      doc.text("Factura de Solicitud", 105, 20, { align: "center" });
+
+      doc.setFontSize(12);
+      doc.setDrawColor(0);
+      doc.line(20, 25, 190, 25);
+
+      doc.setFont("helvetica", "normal");
+      doc.text(`Cliente: ${nombre}`, 20, 35);
+      doc.text(`CUIL: ${cuil}`, 20, 42);
+      doc.text(`Edad: ${edad}`, 20, 49);
+      doc.text(`Ubicación: ${ubicacion}`, 20, 56);
+      doc.setTextColor(200, 0, 0);
+      doc.text(`Estado de solicitud: ${estado}`, 20, 63);
+      doc.setTextColor(0, 0, 0);
+
+      doc.line(20, 68, 190, 68);
+      doc.setFont("helvetica", "bold");
+      doc.text("Cláusulas importantes:", 20, 75);
+      doc.setFont("helvetica", "normal");
+
+      const clausulasFormateadas = doc.splitTextToSize(clausulas, 170);
+      doc.text(clausulasFormateadas, 20, 82);
+
+      // Sección de factura
+      let y = 82 + clausulasFormateadas.length * 6 + 10;
+      doc.setFont("helvetica", "bold");
+      doc.text("Detalle de Factura:", 20, y);
+      doc.setFont("helvetica", "normal");
+      y += 10;
+      doc.text("Concepto: Evaluación de solicitud", 20, y);
+      doc.text("Monto: $5,000", 150, y);
+      y += 10;
+      doc.line(20, y, 190, y);
+      y += 10;
+      doc.setFont("helvetica", "bold");
+      doc.text("Total: $5,000", 150, y);
+
+      doc.save("factura_solicitud_cliente.pdf");
     }
   </script>
 </body>
