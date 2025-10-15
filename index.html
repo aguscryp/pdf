@@ -129,42 +129,38 @@ Agradecemos su interés y le deseamos lo mejor en sus próximos proyectos.
       doc.setFontSize(18);
       doc.text("Factura de Solicitud", 105, 20, { align: "center" });
 
-      doc.setTextColor(255, 0, 0);
-      doc.setFontSize(30);
-      doc.text("RECHAZADO", 105, 35, { align: "center" });
-
       doc.setFontSize(12);
       doc.setTextColor(0, 0, 0);
       doc.setDrawColor(150);
-      doc.line(20, 42, 190, 42);
-      doc.text(`Factura Nº: #${String(facturaNum).padStart(4, '0')}`, 20, 50);
-      doc.text(`Fecha: ${fecha}`, 150, 50);
-      doc.text(`Cliente: ${nombre}`, 20, 58);
-      doc.text(`CUIL: ${cuil}`, 20, 65);
-      doc.text(`Edad: ${edad}`, 20, 72);
-      doc.text(`Provincia: ${provincia}`, 20, 79);
-      doc.text(`Localidad: ${localidad}`, 20, 86);
+      doc.line(20, 30, 190, 30);
+      doc.text(`Factura Nº: #${String(facturaNum).padStart(4, '0')}`, 20, 38);
+      doc.text(`Fecha: ${fecha}`, 150, 38);
+      doc.text(`Cliente: ${nombre}`, 20, 46);
+      doc.text(`CUIL: ${cuil}`, 20, 53);
+      doc.text(`Edad: ${edad}`, 20, 60);
+      doc.text(`Provincia: ${provincia}`, 20, 67);
+      doc.text(`Localidad: ${localidad}`, 20, 74);
 
-      doc.line(20, 91, 190, 91);
+      doc.line(20, 80, 190, 80);
       doc.setFont("helvetica", "bold");
-      doc.text("Detalle de Factura:", 20, 98);
+      doc.text("Detalle de Factura:", 20, 88);
       doc.setFont("helvetica", "normal");
-      doc.text("Concepto: Evaluación de solicitud", 20, 106);
-      doc.text("Monto: $5,000", 150, 106);
-      doc.line(20, 111, 190, 111);
+      doc.text("Concepto: Evaluación de solicitud", 20, 96);
+      doc.text("Monto: $5,000", 150, 96);
+      doc.line(20, 101, 190, 101);
       doc.setFont("helvetica", "bold");
-      doc.text("Total: $5,000", 150, 118);
+      doc.text("Total: $5,000", 150, 108);
 
-      doc.line(20, 123, 190, 123);
+      doc.line(20, 113, 190, 113);
       doc.setFont("helvetica", "bold");
-      doc.text("Cláusula Informativa:", 20, 130);
+      doc.text("Cláusula Informativa:", 20, 121);
       doc.setFont("helvetica", "normal");
       const clausulaFormateada = doc.splitTextToSize(clausula, 170);
-      doc.text(clausulaFormateada, 20, 138);
+      doc.text(clausulaFormateada, 20, 129);
 
       doc.setFontSize(10);
       doc.setTextColor(100);
-      doc.text("Sistema desarrollado por Agus | Emprendimientos Digitales", 105, 285, { align: "center" });
+      doc.text("Factura electrónica profesional", 105, 285, { align: "center" });
     }
 
     function vistaPrevia() {
@@ -211,4 +207,5 @@ Agradecemos su interés y le deseamos lo mejor en sus próximos proyectos.
   </script>
 </body>
 </html>
+
 
