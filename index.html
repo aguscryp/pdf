@@ -9,7 +9,6 @@
       margin: 0;
       padding: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: #0f2027;
       background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
       height: 100vh;
       overflow: hidden;
@@ -58,7 +57,7 @@
     }
 
     button {
-      margin-top: 30px;
+      margin-top: 20px;
       padding: 12px 25px;
       background: #007bff;
       color: white;
@@ -84,13 +83,16 @@ AYBAR MAXIMILIANO RICARDO
 33 años
 Buenos Aires (Pcia)
 Villa Dominico"></textarea>
-    <button onclick="generarPDF()">Generar PDF</button>
+    <button onclick="vistaPrevia()">Vista previa</button>
+    <button onclick="descargarPDF()">Descargar PDF</button>
   </div>
 
   <script>
+    let doc;
+
     function generarPDF() {
       const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
+      doc = new jsPDF();
 
       const datos = document.getElementById("datosCliente").value.trim().split("\n");
       const nombre = datos[0] || "";
@@ -135,17 +137,17 @@ Agradecemos su interés y le deseamos lo mejor en sus próximos proyectos.
       doc.setTextColor(0, 0, 0);
       doc.setDrawColor(150);
       doc.line(20, 42, 190, 42);
-      doc.text(`Factura Nº: #${String(facturaNum).padStart(4, '0')}`, 20, 50);
-      doc.text(`Fecha: ${fecha}`, 150, 50);
-      doc.text(`Cliente: ${nombre}`, 20, 58);
-      doc.text(`CUIL: ${cuil}`, 20, 65);
-      doc.text(`Edad: ${edad}`, 20, 72);
-      doc.text(`Provincia: ${provincia}`, 20, 79);
-      doc.text(`Localidad: ${localidad}`, 20, 86);
+      doc.text(`🧾 Factura Nº: #${String(facturaNum).padStart(4, '0')}`, 20, 50);
+      doc.text(`📅 Fecha: ${fecha}`, 150, 50);
+      doc.text(`👤 Cliente: ${nombre}`, 20, 58);
+      doc.text(`🆔 CUIL: ${cuil}`, 20, 65);
+      doc.text(`🎂 Edad: ${edad}`, 20, 72);
+      doc.text(`🌎 Provincia: ${provincia}`, 20, 79);
+      doc.text(`📍 Localidad: ${localidad}`, 20, 86);
 
       doc.line(20, 91, 190, 91);
       doc.setFont("helvetica", "bold");
-      doc.text("Detalle de Factura:", 20, 98);
+      doc.text("🧾 Detalle de Factura:", 20, 98);
       doc.setFont("helvetica", "normal");
       doc.text("Concepto: Evaluación de solicitud", 20, 106);
       doc.text("Monto: $5,000", 150, 106);
@@ -155,12 +157,26 @@ Agradecemos su interés y le deseamos lo mejor en sus próximos proyectos.
 
       doc.line(20, 123, 190, 123);
       doc.setFont("helvetica", "bold");
-      doc.text("Cláusula Informativa:", 20, 130);
+      doc.text("📄 Cláusula Informativa:", 20, 130);
       doc.setFont("helvetica", "normal");
       const clausulaFormateada = doc.splitTextToSize(clausula, 170);
       doc.text(clausulaFormateada, 20, 138);
 
-      doc.save(`factura_${nombre.replaceAll(" ", "_")}.pdf`);
+      doc.setFontSize(10);
+      doc.setTextColor(100);
+      doc.text("Sistema desarrollado por Agus | Emprendimientos Digitales", 105, 285, { align: "center" });
+    }
+
+    function vistaPrevia() {
+      generarPDF();
+      const pdfBlob = doc.output("blob");
+      const url = URL.createObjectURL(pdfBlob);
+      window.open(url, "_blank");
+    }
+
+    function descargarPDF() {
+      if (!doc) generarPDF();
+      doc.save("factura_cliente.pdf");
     }
 
     // Partículas animadas
