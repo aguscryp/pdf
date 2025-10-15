@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Factura Profesional PDF</title>
+  <title>Generador de Factura PDF</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body {
@@ -28,7 +28,7 @@
       margin-top: 15px;
       font-weight: 600;
     }
-    input, textarea {
+    textarea {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
@@ -53,39 +53,52 @@
 </head>
 <body>
   <div class="formulario">
-    <h2>Formulario de Cliente</h2>
-    <label>Nombre completo:</label>
-    <input type="text" id="nombre" />
+    <h2>Generador de Factura PDF</h2>
+    <label>Pegá los datos del cliente:</label>
+    <textarea id="datosCliente" rows="6" placeholder="Ejemplo:
+AYBAR MAXIMILIANO RICARDO
+20-36520980-5
+33 años
+Buenos Aires (Pcia)
+Villa Dominico"></textarea>
 
-    <label>CUIL:</label>
-    <input type="text" id="cuil" />
-
-    <label>Edad:</label>
-    <input type="text" id="edad" />
-
-    <label>Ubicación:</label>
-    <input type="text" id="ubicacion" />
-
-    <label>Estado:</label>
-    <input type="text" id="estado" />
-
-    <label>Cláusulas importantes:</label>
-    <textarea id="clausulas" rows="10"></textarea>
-
-    <button onclick="generarPDF()">Generar Factura PDF</button>
+    <button onclick="generarPDF()">Generar PDF</button>
   </div>
 
   <script>
-    async function generarPDF() {
+    function generarPDF() {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
 
-      const nombre = document.getElementById("nombre").value;
-      const cuil = document.getElementById("cuil").value;
-      const edad = document.getElementById("edad").value;
-      const ubicacion = document.getElementById("ubicacion").value;
-      const estado = document.getElementById("estado").value;
-      const clausulas = document.getElementById("clausulas").value;
+      const datos = document.getElementById("datosCliente").value.trim().split("\n");
+      const nombre = datos[0] || "";
+      const cuil = datos[1] || "";
+      const edad = datos[2] || "";
+      const provincia = datos[3] || "";
+      const localidad = datos[4] || "";
+
+      const fecha = new Date().toLocaleDateString();
+      let facturaNum = localStorage.getItem("facturaNum");
+      facturaNum = facturaNum ? parseInt(facturaNum) + 1 : 1;
+      localStorage.setItem("facturaNum", facturaNum);
+
+      const clausula = `
+Estimado/a cliente:
+
+Le informamos que el monto de $5,000 abonado corresponde exclusivamente al proceso de evaluación y diagnóstico profesional, destinado a determinar su aptitud para trabajar bajo nuestra metodología.
+
+Actualmente gestionamos más de 557 clientes activos y hemos expandido nuestros servicios de forma digital, lo que nos permite ofrecer esta experiencia de manera remota. Como en todo proceso profesional, los resultados pueden variar.
+
+🔹 Resultado de su evaluación: RECHAZADO
+
+Lamentablemente, no podremos avanzar con una colaboración en este momento. Es importante destacar que el monto abonado ha sido consumido por el sistema en el proceso de análisis, y no se contempla ningún tipo de reembolso una vez iniciado el diagnóstico.
+
+Antes de realizar el pago, usted aceptó los términos informativos donde se especifica que el resultado puede ser aceptado o rechazado, y que no depende exclusivamente de nuestra decisión.
+
+Somos emprendedores comprometidos con la ética y la transparencia. Jamás nos hemos quedado con dinero ajeno, y trabajamos día a día para brindar lo mejor a cada cliente.
+
+Agradecemos su interés y le deseamos lo mejor en sus próximos proyectos.
+      `;
 
       doc.setFont("helvetica", "bold");
       doc.setFontSize(18);
@@ -96,39 +109,34 @@
       doc.line(20, 25, 190, 25);
 
       doc.setFont("helvetica", "normal");
-      doc.text(`Cliente: ${nombre}`, 20, 35);
-      doc.text(`CUIL: ${cuil}`, 20, 42);
-      doc.text(`Edad: ${edad}`, 20, 49);
-      doc.text(`Ubicación: ${ubicacion}`, 20, 56);
-      doc.setTextColor(200, 0, 0);
-      doc.text(`Estado de solicitud: ${estado}`, 20, 63);
-      doc.setTextColor(0, 0, 0);
+      doc.text(`Factura Nº: #${String(facturaNum).padStart(4, '0')}`, 20, 32);
+      doc.text(`Fecha: ${fecha}`, 150, 32);
+      doc.text(`Cliente: ${nombre}`, 20, 40);
+      doc.text(`CUIL: ${cuil}`, 20, 47);
+      doc.text(`Edad: ${edad}`, 20, 54);
+      doc.text(`Provincia: ${provincia}`, 20, 61);
+      doc.text(`Localidad: ${localidad}`, 20, 68);
 
-      doc.line(20, 68, 190, 68);
+      doc.line(20, 73, 190, 73);
       doc.setFont("helvetica", "bold");
-      doc.text("Cláusulas importantes:", 20, 75);
+      doc.text("Detalle de Factura:", 20, 80);
+      doc.setFont("helvetica", "normal");
+      doc.text("Concepto: Evaluación de solicitud", 20, 88);
+      doc.text("Monto: $5,000", 150, 88);
+      doc.line(20, 93, 190, 93);
+      doc.setFont("helvetica", "bold");
+      doc.text("Total: $5,000", 150, 100);
+
+      doc.line(20, 105, 190, 105);
+      doc.setFont("helvetica", "bold");
+      doc.text("Cláusula Informativa:", 20, 112);
       doc.setFont("helvetica", "normal");
 
-      const clausulasFormateadas = doc.splitTextToSize(clausulas, 170);
-      doc.text(clausulasFormateadas, 20, 82);
+      const clausulaFormateada = doc.splitTextToSize(clausula, 170);
+      doc.text(clausulaFormateada, 20, 120);
 
-      // Sección de factura
-      let y = 82 + clausulasFormateadas.length * 6 + 10;
-      doc.setFont("helvetica", "bold");
-      doc.text("Detalle de Factura:", 20, y);
-      doc.setFont("helvetica", "normal");
-      y += 10;
-      doc.text("Concepto: Evaluación de solicitud", 20, y);
-      doc.text("Monto: $5,000", 150, y);
-      y += 10;
-      doc.line(20, y, 190, y);
-      y += 10;
-      doc.setFont("helvetica", "bold");
-      doc.text("Total: $5,000", 150, y);
-
-      doc.save("factura_solicitud_cliente.pdf");
+      doc.save(`factura_${nombre.replaceAll(" ", "_")}.pdf`);
     }
   </script>
 </body>
 </html>
-
